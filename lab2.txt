@@ -1,0 +1,17 @@
+create table person
+(
+  Pid int,
+  Name varchar(10),
+  Address varchar(20),
+  Salary int
+);
+insert into person values(110,'Neha','Bangalore',999999);
+insert into person values(111,'Parnika','Mysore',99999);
+insert into person values(112,'Tanusha','Mumbai',120000);
+insert into person values(113,'Arshitha','Chennai',13000);
+insert into person values(114,'Aisiri','Kolkata',10000);
+insert into person values(115,'Bindu','Delhi',44444);
+insert into person values(116,'John','Punjab',55000);
+insert into person values(117,'Reshika','Rajasthan',22000);
+insert into person values(118,'Emily','Kerala',33333);
+insert into person values(119,'Jerry','Mangalore',11111);
