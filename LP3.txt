@@ -1,0 +1,22 @@
+ create table emp(
+   Eid INT,
+    Ename Varchar(50),
+    Age INT,
+    Salary Decimal(10,2)
+    );
+
+insert into emp VALUES (100,'PN',20,50000);
+insert into emp VALUES (101,'NP',21,45000);
+insert into emp VALUES (102,'DP',22,43000);
+insert into emp VALUES (103,'RP',23,40000);
+insert into emp VALUES (104,'DDP',24,34000);
+
+select count(Ename) from emp;
+
+select max(Age) from emp;
+select min(Age) from emp;
+
+select * from emp
+order by SALARY;
+
+SELECT SALARY, COUNT(*) FROM emp group by SALARY;
