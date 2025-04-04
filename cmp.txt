@@ -1,0 +1,204 @@
+-- Create the EMPLOYEE table without foreign keys
+CREATE TABLE EMPLOYEE (
+    Fname VARCHAR(15),
+    Mname VARCHAR(15),
+    Lname VARCHAR(15),
+    Ssn VARCHAR(20) PRIMARY KEY,
+    Bdate DATE,
+    Address VARCHAR(100),
+    Sex CHAR(1),
+    Salary DECIMAL(10,2),
+    Super_ssn VARCHAR(20),  -- This will reference Ssn in the same table
+    Dno INT
+);
+
+-- Create the DEPARTMENT table without foreign keys
+CREATE TABLE DEPARTMENT (
+    Dname VARCHAR(15),
+    Dnumber INT PRIMARY KEY,
+    Mgr_ssn VARCHAR(20),   -- This will reference Ssn in the EMPLOYEE table
+    Mgr_start_date DATE
+);
+
+-- Create the DEPT_LOCATIONS table without foreign keys
+CREATE TABLE DEPT_LOCATIONS (
+    Dnumber INT,
+    Dlocation VARCHAR(100),
+    PRIMARY KEY (Dnumber, Dlocation)
+);
+
+-- Create the PROJECT table without foreign keys
+CREATE TABLE PROJECT (
+    Pname VARCHAR(15),
+    Pnumber INT PRIMARY KEY,
+    Plocation VARCHAR(100),
+    Dnum INT
+);
+
+-- Create the WORKS_ON table without foreign keys
+CREATE TABLE WORKS_ON (
+    Essn VARCHAR(20),
+    Pno INT,
+    Hours DECIMAL(5,2),
+    PRIMARY KEY (Essn, Pno)
+);
+
+-- Create the DEPENDENT table without foreign keys
+CREATE TABLE DEPENDENT (
+    Essn VARCHAR(20),
+    Dependent_name VARCHAR(15),
+    Sex CHAR(1),
+    Bdate DATE,
+    Relationship VARCHAR(20),
+    PRIMARY KEY (Essn, Dependent_name)
+);
+
+-- Now, add the foreign key constraints
+
+-- Add foreign key for Super_ssn referencing EMPLOYEE(Ssn)
+ALTER TABLE EMPLOYEE
+ADD CONSTRAINT FK_EMPLOYEE_SUPERVISOR
+FOREIGN KEY (Super_ssn)
+REFERENCES EMPLOYEE(Ssn);
+
+-- Add foreign key for Dno referencing DEPARTMENT(Dnumber)
+ALTER TABLE EMPLOYEE
+ADD CONSTRAINT FK_EMPLOYEE_DEPARTMENT
+FOREIGN KEY (Dno)
+REFERENCES DEPARTMENT(Dnumber);
+
+-- Add foreign key for Mgr_ssn referencing EMPLOYEE(Ssn)
+ALTER TABLE DEPARTMENT
+ADD CONSTRAINT FK_DEPARTMENT_MANAGER
+FOREIGN KEY (Mgr_ssn)
+REFERENCES EMPLOYEE(Ssn);
+
+-- Add foreign key for Dnumber referencing DEPARTMENT(Dnumber)
+ALTER TABLE DEPT_LOCATIONS
+ADD CONSTRAINT FK_DEPT_LOCATIONS
+FOREIGN KEY (Dnumber)
+REFERENCES DEPARTMENT(Dnumber);
+
+-- Add foreign key for Dnum referencing DEPARTMENT(Dnumber)
+ALTER TABLE PROJECT
+ADD CONSTRAINT FK_PROJECT_DEPARTMENT
+FOREIGN KEY (Dnum)
+REFERENCES DEPARTMENT(Dnumber);
+
+-- Add foreign key for Essn referencing EMPLOYEE(Ssn)
+ALTER TABLE WORKS_ON
+ADD CONSTRAINT FK_WORKS_ON_EMPLOYEE
+FOREIGN KEY (Essn)
+REFERENCES EMPLOYEE(Ssn);
+
+-- Add foreign key for Pno referencing PROJECT(Pnumber)
+ALTER TABLE WORKS_ON
+ADD CONSTRAINT FK_WORKS_ON_PROJECT
+FOREIGN KEY (Pno)
+REFERENCES PROJECT(Pnumber);
+
+-- Add foreign key for Essn referencing EMPLOYEE(Ssn)
+ALTER TABLE DEPENDENT
+ADD CONSTRAINT FK_DEPENDENT_EMPLOYEE
+FOREIGN KEY (Essn)
+REFERENCES EMPLOYEE(Ssn);
+
+
+
+
+
+
+-- Drop foreign key constraints first (replace constraint names with actual values)
+ALTER TABLE WORKS_ON DROP CONSTRAINT FK_EMPLOYEE_SSN;
+ALTER TABLE DEPENDENT DROP CONSTRAINT FK_EMPLOYEE_SSN;
+ALTER TABLE DEPARTMENT DROP CONSTRAINT FK_EMPLOYEE_DEPARTMENT;
+
+-- Drop the tables in correct order (tables dependent on others should be dropped first)
+DROP TABLE WORKS_ON CASCADE CONSTRAINTS;
+DROP TABLE DEPENDENT CASCADE CONSTRAINTS;
+DROP TABLE DEPT_LOCATIONS CASCADE CONSTRAINTS;
+DROP TABLE PROJECT CASCADE CONSTRAINTS;
+DROP TABLE DEPARTMENT CASCADE CONSTRAINTS;
+DROP TABLE EMPLOYEE CASCADE CONSTRAINTS;
+
+
+INSERT INTO EMPLOYEE VALUES('John', 'A', 'Doe', '101', TO_DATE('02-JUN-1995', 'DD-Mon-YYYY'), '1234 Elm St', 'M', 60000.00, 101, NULL);
+INSERT INTO EMPLOYEE VALUES('Jane', 'B', 'Smith', '102', TO_DATE('24-AUG-1987', 'DD-Mon-YYYY'), '5678 Oak St', 'F', 65000.00, '101', NULL);
+INSERT INTO EMPLOYEE VALUES('Alice', 'C', 'Johnson', '103', TO_DATE('30-DEC-1990', 'DD-Mon-YYYY'), '9101 Pine St', 'F', 70000.00, '102', NULL);
+INSERT INTO EMPLOYEE VALUES('Bob', 'D', 'Smith', '104', TO_DATE('19-MAR-1982', 'DD-Mon-YYYY'), '1212 Maple St', 'M', 80000.00, '102', NULL);
+INSERT INTO EMPLOYEE VALUES('Charlie', 'E', 'Davis', '105', TO_DATE('22-JUL-1989', 'DD-Mon-YYYY'), '3141 Birch St', 'M', 75000.00, '103', NULL);
+INSERT INTO EMPLOYEE VALUES('Samantha', 'F', 'Williams', '106', TO_DATE('15-MAR-1992', 'DD-Mon-YYYY'), '4567 Cedar St', 'F', 85000.00, 103, NULL);
+INSERT INTO EMPLOYEE VALUES('David', 'G', 'Brown', '107', TO_DATE('10-JAN-1985', 'DD-Mon-YYYY'), '7890 Elmwood St', 'M', 90000.00, '105', NULL);
+INSERT INTO EMPLOYEE VALUES('Eve', 'H', 'Martinez', '108', TO_DATE('12-OCT-1990', 'DD-Mon-YYYY'), '1357 Redwood St', 'F', 95000.00, '106', NULL);
+INSERT INTO EMPLOYEE VALUES('Frank', 'I', 'Moore', '109', TO_DATE('25-FEB-1987', 'DD-Mon-YYYY'), '2468 Walnut St', 'M', 98000.00, '107', NULL);
+INSERT INTO EMPLOYEE VALUES('Grace', 'J', 'Taylor', '110', TO_DATE('01-JUL-1993', 'DD-Mon-YYYY'), '3690 Cherry St', 'F', 105000.00, '108', NULL);
+
+
+INSERT INTO DEPARTMENT (Dname, Dnumber, Mgr_ssn, Mgr_start_date)
+VALUES ('HR', 1, '101', TO_DATE('01-JAN-2015', 'DD-Mon-YYYY'));
+
+INSERT INTO DEPARTMENT (Dname, Dnumber, Mgr_ssn, Mgr_start_date)
+VALUES ('Finance', 2, '102', TO_DATE('05-FEB-2016', 'DD-Mon-YYYY'));
+
+INSERT INTO DEPARTMENT (Dname, Dnumber, Mgr_ssn, Mgr_start_date)
+VALUES ('IT', 3, '103', TO_DATE('10-MAR-2018', 'DD-Mon-YYYY'));
+
+INSERT INTO DEPARTMENT (Dname, Dnumber, Mgr_ssn, Mgr_start_date)
+VALUES ('Marketing', 4, '104', TO_DATE('15-JUL-2017', 'DD-Mon-YYYY'));
+
+INSERT INTO DEPARTMENT (Dname, Dnumber, Mgr_ssn, Mgr_start_date)
+VALUES ('Operations', 5, '105', TO_DATE('20-NOV-2019', 'DD-Mon-YYYY'));
+
+INSERT INTO DEPARTMENT (Dname, Dnumber, Mgr_ssn, Mgr_start_date)
+VALUES ('Sales', 6, '106', TO_DATE('25-APR-2020', 'DD-Mon-YYYY'));
+
+INSERT INTO DEPARTMENT (Dname, Dnumber, Mgr_ssn, Mgr_start_date)
+VALUES ('Research', 7, '107', TO_DATE('30-AUG-2021', 'DD-Mon-YYYY'));
+
+INSERT INTO DEPARTMENT (Dname, Dnumber, Mgr_ssn, Mgr_start_date)
+VALUES ('Customer Service', 8, '108', TO_DATE('05-DEC-2022', 'DD-Mon-YYYY'));
+
+INSERT INTO DEPARTMENT (Dname, Dnumber, Mgr_ssn, Mgr_start_date)
+VALUES ('Legal', 9, '109', TO_DATE('10-JAN-2023', 'DD-Mon-YYYY'));
+
+INSERT INTO DEPARTMENT (Dname, Dnumber, Mgr_ssn, Mgr_start_date)
+VALUES ('Product Upgrade', 10, '110', TO_DATE('15-JUN-2023', 'DD-Mon-YYYY'));
+
+
+
+INSERT INTO DEPT_LOCATIONS VALUES(1, 'New York');
+INSERT INTO DEPT_LOCATIONS VALUES(5, 'Chicago');
+INSERT INTO DEPT_LOCATIONS VALUES(2, 'San Francisco');
+INSERT INTO DEPT_LOCATIONS VALUES(3, 'Boston');
+INSERT INTO DEPT_LOCATIONS VALUES(4, 'Austin');
+
+
+INSERT INTO PROJECT VALUES('Project A', 101, 'New York', 1);
+INSERT INTO PROJECT VALUES('Project B', 102, 'San Francisco', 2);
+INSERT INTO PROJECT VALUES('Project C', 103, 'Boston', 3);
+INSERT INTO PROJECT VALUES('Project D', 104, 'Austin', 4);
+INSERT INTO PROJECT VALUES('Project E', 105, 'Chicago', 5);
+
+
+INSERT INTO DEPENDENT VALUES ('101', 'Michael', 'M', '10-Feb-2015', 'Son');
+INSERT INTO DEPENDENT VALUES('101', 'Emily', 'F', '18-Jun-2017', 'Daughter');
+INSERT INTO DEPENDENT VALUES('102', 'Sophia', 'F', '25-Apr-2014', 'Daughter');
+INSERT INTO DEPENDENT VALUES('103', 'Oliver', 'M', '15-Aug-2018', 'Son');
+INSERT INTO DEPENDENT VALUES('105', 'Lucas', 'M', '20-Oct-2020', 'Son');
+
+
+CREATE TABLE WORKS_ON (
+    Essn VARCHAR(20),
+    Pno INT,
+    Hours DECIMAL(5, 2),
+    PRIMARY KEY (Essn, Pno));
+
+-- Assuming the WORKS_ON table already exists as created previously:
+
+ALTER TABLE WORKS_ON
+ADD CONSTRAINT FK_WorksOn_Essn
+FOREIGN KEY (Essn) REFERENCES EMPLOYEE(Ssn);
+
+ALTER TABLE WORKS_ON
+ADD CONSTRAINT FK_WorksOn_Pno
+FOREIGN KEY (Pno) REFERENCES PROJECT(Pnumber);
